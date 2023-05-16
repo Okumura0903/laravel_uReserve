@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LivewireTestController;
+use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +28,12 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+//controllerをまとめる書き方
+Route::controller(LivewireTestController::class)
+->prefix('livewire-test')->name('livewire-test.')->group(function(){
+    Route::get('index','index')->name('index');
+    Route::get('register','register')->name('register');
+   
+});
+
