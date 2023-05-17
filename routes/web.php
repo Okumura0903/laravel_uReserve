@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LivewireTestController;
 use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 use App\Http\Controllers\AlpineTestController;
+use App\Http\Controllers\EventController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,13 +30,11 @@ Route::middleware([
     })->name('dashboard');
 });
 
+//マネージャー以上の権限（認可）
 Route::prefix('manager')
 ->middleware('can:manager-higher')
 ->group(function(){
-    Route::get('index', function () {
-        dd('manager');
-        return view('welcome');
-    });
+    Route::resource('events', EventController::class);//manager/events/index,create,...
 });
 
 Route::middleware('can:user-higher')
