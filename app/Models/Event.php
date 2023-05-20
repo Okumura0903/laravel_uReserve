@@ -19,7 +19,7 @@ class Event extends Model
         'end_date',
         'is_visible'
     ];
-    
+
     //アクセサ
     protected function eventDate(): Attribute{
         return Attribute::make(
@@ -36,5 +36,9 @@ class Event extends Model
             get:fn()=>Carbon::parse($this->end_date)->format('H時i分')//アロー関数
         );
     }
-
+    protected function editEventDate(): Attribute{
+        return Attribute::make(
+            get:fn()=>Carbon::parse($this->start_date)->format('Y-m-d')//アロー関数
+        );
+    }
 }

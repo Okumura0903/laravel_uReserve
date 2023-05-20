@@ -5,6 +5,8 @@ use App\Http\Controllers\LivewireTestController;
 use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 use App\Http\Controllers\AlpineTestController;
 use App\Http\Controllers\EventController;
+use Barryvdh\Debugbar\DataCollector\EventCollector;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,6 +36,7 @@ Route::middleware([
 Route::prefix('manager')
 ->middleware('can:manager-higher')
 ->group(function(){
+    Route::get('events/past',[EventController::class,'past'])->name('events.past');
     Route::resource('events', EventController::class);//manager/events/index,create,...
 });
 
