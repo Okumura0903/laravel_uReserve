@@ -18,10 +18,34 @@ class EventController extends Controller
     {
         //
         $today=Carbon::today();
+
+        //予約テーブルからイベントごとの合計人数でテーブルを作る
+        $reservedPeople=DB::table('reservations')->select('event_id',DB::raw('sum(number_of_people) as number_of_people'))
+        ->whereNull('canceled_date')
+        ->groupBy('event_id');//DB::rawで生のSQLを書ける
+
+        //内部結合・・合計人数がない場合データが表示されない：joinSub
+        //外部結合・・合計人数がない場合、nullとして表示される：leftJoinSub
+        // +"id": 1
+        // +"name": "青山 美加子"
+        // +"information": "を解とけいやの店にはなんと立ちどま向むかしだのそとを思いだいもいいのがつまりもう咽喉のどい近眼鏡きんがたずねました。（この頁ページ一つずつ集あつまみ、掌てのぞきこうね」と叫さけびましたら、それでも着ついているかとおりたいてしました。「ありません。りんごを見ました。それにさっきかんしゅうに見えないかけて、この辺へんじまい ▶"
+        // +"max_people": 17
+        // +"start_date": "2023-05-01 09:01:37"
+        // +"end_date": "2023-05-01 10:01:37"
+        // +"is_visible": 1
+        // +"created_at": "2023-05-21 20:02:15"
+        // +"updated_at": "2023-05-21 20:02:15"
+        // +"event_id": 1
+        // +"number_of_people": "8"
+
         $events=DB::table('events')
-        ->where('start_date','>=',$today)
-        ->orderBy('start_date','asc')
-        ->paginate(10);
+        ->leftJoinSub($reservedPeople,'reservedPeople',function($join){//元のテーブルにnumber_of_peopleを追加する
+            $join->on('events.id','=','reservedPeople.event_id');//イベントテーブルのidと↑の予約人数テーブルのidで結合
+        })
+         ->where('start_date','>=',$today)
+         ->orderBy('start_date','asc')
+         ->paginate(10);
+
         return view('manager.events.index',compact('events'));
     }
 
@@ -69,10 +93,23 @@ class EventController extends Controller
     {
         //
         $event=Event::findOrFail($event->id);
+
+        $users=$event->users;
+//        dd($users,$event);
+        $reservations=[];
+        foreach($users as $user){
+            $reservedInfo=[
+                'name'=>$user->name,
+                'number_of_people'=>$user->pivot->number_of_people,
+                'canceled_date'=>$user->pivot->canceled_date
+            ];
+            array_push($reservations,$reservedInfo);
+        }
+//        dd($reservations);
         $eventDate=$event->eventDate;
         $startTime=$event->startTime;
         $endTime=$event->endTime;
-        return view('manager.events.show',compact('event','eventDate','startTime','endTime'));
+        return view('manager.events.show',compact('event','users','reservations','eventDate','startTime','endTime'));
     }
 
     /**
@@ -139,7 +176,16 @@ class EventController extends Controller
     {
         //
         $today=Carbon::today();
+
+        //予約テーブルからイベントごとの合計人数でテーブルを作る
+        $reservedPeople=DB::table('reservations')->select('event_id',DB::raw('sum(number_of_people) as number_of_people'))
+        ->whereNull('canceled_date')
+        ->groupBy('event_id');//DB::rawで生のSQLを書ける
+
         $events=DB::table('events')
+        ->leftJoinSub($reservedPeople,'reservedPeople',function($join){//元のテーブルにnumber_of_peopleを追加する
+            $join->on('events.id','=','reservedPeople.event_id');//イベントテーブルのidと↑の予約人数テーブルのidで結合
+        })
         ->whereDate('start_date','<',$today)
         ->orderBy('start_date','desc')
         ->paginate(10);

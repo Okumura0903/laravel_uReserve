@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Event;
 
 class User extends Authenticatable
 {
@@ -59,4 +60,10 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function events(){
+        //多対多のリレーション
+        //中間テーブルに属性を追加した場合はwithPivotで書いておく(デフォルトではuser_idとevent_idのみ)
+        return $this->belongsToMany(Event::class,'reservations')->withPivot('id','number_of_people','canceled_date');
+    }
 }
