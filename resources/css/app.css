@@ -6,3 +6,7 @@
 [x-cloak] {
     display: none;
 }
+
+.event-calendar{
+    width:1000px;
+}
