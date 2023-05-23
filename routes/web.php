@@ -5,6 +5,7 @@ use App\Http\Controllers\LivewireTestController;
 use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 use App\Http\Controllers\AlpineTestController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ReservationController;
 use Barryvdh\Debugbar\DataCollector\EventCollector;
 
 /*
@@ -22,15 +23,17 @@ Route::get('/', function () {
     return view('calendar');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified'
+// ])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');
+// });
+
+
 
 //マネージャー以上の権限（認可）
 Route::prefix('manager')
@@ -42,9 +45,9 @@ Route::prefix('manager')
 
 Route::middleware('can:user-higher')
 ->group(function(){
-    Route::get('index',function(){
-        dd('user');
-    });
+    Route::get('/dashboard',[ReservationController::class,'dashboard'])->name('dashboard');
+    Route::get('/{id}',[ReservationController::class,'detail'])->name('events.detail');   
+    Route::post('/{id}',[ReservationController::class,'reserve'])->name('events.reserve');   
 });
 
 //controllerをまとめる書き方
