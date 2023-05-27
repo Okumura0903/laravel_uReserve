@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\User;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\SendMail;
 
 class ReservationController extends Controller
 {
@@ -56,6 +58,8 @@ class ReservationController extends Controller
                 'event_id'=>$request->id,
                 'number_of_people'=>$request->reserved_people,
             ]);
+            SendMail::dispatch($event->name,User::findOrFail(Auth::id())->name,User::findOrFail(Auth::id())->email);
+
             session()->flash('status','登録OKです');
             return to_route('dashboard');
         }
