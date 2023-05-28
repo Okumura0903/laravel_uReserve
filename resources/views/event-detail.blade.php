@@ -1,6 +1,6 @@
 @auth
     <x-event-detail-auth
-    :event='$event' :reservablePeople='$reservablePeople' :isReserved='$isReserved'
+    :event='$event' :reservablePeople='$reservablePeople' :isReserved='$isReserved' :isWaiting='$isWaiting'
      />
 @endauth
 
