@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Ramsey\Uuid\Type\Integer;
 
 class Cancel extends Mailable
 {
@@ -17,12 +18,15 @@ class Cancel extends Mailable
      * Create a new message instance.
      */
 
-    public $userName;
-    public $eventName;
+    // public $userName;
+    // public $eventName;
+    // public $eventId;
     
-    public function __construct($userId,$eventId,$userName,$eventName)
+    public function __construct(public $userId,public $eventId,public $userName,public $eventName)
     {
-
+        // $this->userName=$userName;
+        // $this->eventName=$eventName;
+        // $this->eventId=$eventId;
     }
 
     /**

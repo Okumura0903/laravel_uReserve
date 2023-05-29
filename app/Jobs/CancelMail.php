@@ -46,6 +46,7 @@ class CancelMail implements ShouldQueue
     public function handle(): void
     {
         //
+//        Log::debug("debug ログ!".$this->eventId);
         Mail::to($this->email)->send(new Cancel($this->userId,$this->eventId,$this->userName,$this->eventName));
     }
 }
