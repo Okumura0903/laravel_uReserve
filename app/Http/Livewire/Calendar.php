@@ -6,6 +6,7 @@ use Livewire\Component;
 use Carbon\CarbonImmutable;//カーボンイミュータブル；不変
 //$this->sevenDaysLater=$this->currentDate->addDays(7);で$this->currentDateの値も変わってしまうのを防ぐ
 use App\Services\EventService;
+use App\Models\Reservation;
 
 class Calendar extends Component
 {

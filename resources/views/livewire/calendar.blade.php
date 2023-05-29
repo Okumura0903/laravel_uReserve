@@ -19,15 +19,20 @@
                             $eventName=$events->firstWhere('start_date',$currentWeek[$i]['checkDay']." ".\Constant::EVENT_TIME[$j])->name;
                             $eventInfo=$events->firstWhere('start_date',$currentWeek[$i]['checkDay']." ".\Constant::EVENT_TIME[$j]);
                             $eventPeriod=\Carbon\Carbon::parse($eventInfo->start_date)->diffInMinutes($eventInfo->end_date)/30-1;
+                            //定員判定
+                            $capacity='bg-blue-100';
+                            if($eventInfo->max_people <= $eventInfo->number_of_people){
+                                $capacity='bg-red-100';
+                            }
                         @endphp
                         <a href="{{route('events.detail',['id'=>$eventId])}}">
-                            <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">
+                            <div class="py-1 px-2 h-8 border border-gray-200 text-xs {{$capacity}}">
                                 {{$eventName}}
                             </div>
                         </a>
                         @if($eventPeriod>0)
                             @for($k=0;$k<$eventPeriod;$k++)
-                                <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100"></div>
+                                <div class="py-1 px-2 h-8 border border-gray-200 text-xs {{$capacity}}"></div>
                             @endfor
                             @php
                             $j+=$eventPeriod;
