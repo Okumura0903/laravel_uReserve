@@ -8,6 +8,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\MyPageController;
 use App\Http\Controllers\ReservationController;
 use Barryvdh\Debugbar\DataCollector\EventCollector;
+use App\Http\Controllers\LoginWithGoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,3 +67,15 @@ Route::controller(LivewireTestController::class)
 
 Route::get('alpine-test/index',[AlpineTestController::class,'index']);
 
+
+
+Route::get("auth/google", [
+LoginWithGoogleController::class,
+"redirectToGoogle",
+]);
+
+
+Route::get("auth/google/callback", [
+LoginWithGoogleController::class,
+"handleGoogleCallback",
+]);
